@@ -8,7 +8,9 @@ class MY_Model extends CI_Model {
      * Create record.
      */
     private function insert() {
-        $this->{$this::DB_TABLE_PK} = $this->db->insert_id();
+        $this->db->select_max($this::DB_TABLE_PK);
+        $result = $this->db->get($this::DB_TABLE)->row();
+        $this->{$this::DB_TABLE_PK} = $result->{$this::DB_TABLE_PK} + 1;
         $this->db->insert($this::DB_TABLE, $this);
     }
 
