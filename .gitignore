@@ -11,3 +11,6 @@ application/logs/*
 # IntelliJ Idea Files
 *.iml
 .idea
+
+# image upload directory
+upload

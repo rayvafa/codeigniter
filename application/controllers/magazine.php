@@ -7,6 +7,7 @@ class Magazine extends CI_Controller {
      */
     public function index()
     {
+        $this->load->helper('url');
         $this->load->view('bootstrap/header');
         $this->load->library('table');
         $magazines = array();
@@ -19,6 +20,9 @@ class Magazine extends CI_Controller {
                 $publication->publication_name,
                 $issue->issue_number,
                 $issue->issue_date_publication,
+                $issue->issue_cover ? 'Y' : 'N',
+                anchor('magazine/view/' . $issue->issue_id, 'View') . ' | ' .
+                anchor('magazine/delete/' . $issue->issue_id, 'Delete'),
             );
         }
         $this->load->view('magazines', array(
@@ -107,5 +111,27 @@ class Magazine extends CI_Controller {
             return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * View a magazine.
+     * @param int $issue_id
+     */
+    public function view($issue_id) {
+        $this->load->helper('html');
+        $this->load->view('bootstrap/header');
+        $this->load->model(array('Issue', 'Publication'));
+        $issue = new Issue();
+        $issue->load($issue_id);
+        if (!$issue->issue_id) {
+            show_404();
+        }
+        $publication = new Publication();
+        $publication->load($issue->publication_id);
+        $this->load->view('magazine', array(
+            'issue' => $issue,
+            'publication' => $publication
+        ));
+        $this->load->view('bootstrap/footer');
     }
 }
