@@ -31,6 +31,14 @@ class Magazine extends CI_Controller {
      * Add a Magazine.
      */
     public function add() {
+        $config = array(
+            'upload_path' => 'upload',
+            'allowed_types' => 'gif|jpg|png',
+            'max_size' => 250,
+            'max_width' => 1920,
+            'max_heigh' => 1080,
+        );
+        $this->load->library('upload', $config);
         $this->load->helper('form');
         $this->load->view('bootstrap/header');
         // Populate publications.
@@ -60,7 +68,11 @@ class Magazine extends CI_Controller {
             ),
         ));
         $this->form_validation->set_error_delimiters('<div class="alert alert-error">', '</div>');
-        if (!$this->form_validation->run()) {
+        $check_file_upload = FALSE;
+        if (isset($_FILES['issue_cover']['error']) && ($_FILES['issue_cover']['error'] != 4)) {
+            $check_file_upload = TRUE;
+        }
+        if (!$this->form_validation->run() || ($check_file_upload && !$this->upload->do_upload('issue_cover'))) {
             $this->load->view('magazine_form', array(
                 'publication_form_options' => $publication_form_options,
             ));
@@ -71,6 +83,10 @@ class Magazine extends CI_Controller {
             $issue->publication_id = $this->input->post('publication_id');
             $issue->issue_number = $this->input->post('issue_number');
             $issue->issue_date_publication = $this->input->post('issue_date_publication');
+            $upload_data = $this->upload->data();
+            if (isset($upload_data['file_name'])) {
+                $issue->issue_cover = $upload_data['file_name'];
+            }
             $issue->save();
             $this->load->view('magazine_form_success', array(
                 'issue' => $issue,
