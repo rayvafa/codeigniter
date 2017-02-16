@@ -134,4 +134,23 @@ class Magazine extends CI_Controller {
         ));
         $this->load->view('bootstrap/footer');
     }
+
+    /**
+     * Delete a magazine.
+     * @param int $issue_id
+     */
+    public function delete($issue_id) {
+        $this->load->view('bootstrap/header');
+        $this->load->model(array('Issue'));
+        $issue = new Issue();
+        $issue->load($issue_id);
+        if (!$issue->issue_id) {
+            show_404();
+        }
+        $issue->delete();
+        $this->load->view('magazine_deleted', array(
+            'issue_id' => $issue_id,
+        ));
+        $this->load->view('bootstrap/footer');
+    }
 }
