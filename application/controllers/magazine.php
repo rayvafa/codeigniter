@@ -7,20 +7,19 @@ class Magazine extends CI_Controller {
      */
     public function index()
     {
+        $data = array();
         $this->load->model('Publication');
-        $this->Publication->publication_name = 'Sandy Shore';
-        $this->Publication->save();
-        echo '<tt><pre>' . var_export($this->Publication, TRUE) . '</pre></tt>';
+        $publication = new Publication();
+        $publication->load(0);
+        $data['publication'] = $publication;
 
         $this->load->model('Issue');
         $issue = new Issue();
-        $issue->publication_id = $this->Publication->publication_id;
-        $issue->issue_number = 2;
-        $issue->issue_date_publication = date('2013-02-01');
-        $issue->save();
-        echo '<tt><pre>' . var_export($issue, TRUE) . '</pre></tt>';
+        $issue->load(0);
+        $data['issue'] = $issue;
 
-        $this->load->view('magazines');
+        $this->load->view('magazines', $data);
+        $this->load->view('magazine', $data);
     }
 
 }
