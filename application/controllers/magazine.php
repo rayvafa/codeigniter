@@ -31,6 +31,7 @@ class Magazine extends CI_Controller {
      * Add a Magazine.
      */
     public function add() {
+        $this->load->helper('form');
         $this->load->view('bootstrap/header');
         // Populate publications.
         $this->load->model('Publication');
