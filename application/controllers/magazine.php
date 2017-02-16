@@ -7,6 +7,7 @@ class Magazine extends CI_Controller {
      */
     public function index()
     {
+        $this->load->view('bootstrap/header');
         $this->load->library('table');
         $magazines = array();
         $this->load->model(array('Issue', 'Publication'));
@@ -23,12 +24,14 @@ class Magazine extends CI_Controller {
         $this->load->view('magazines', array(
             'magazines' => $magazines,
         ));
+        $this->load->view('bootstrap/footer');
     }
 
     /**
      * Add a Magazine.
      */
     public function add() {
+        $this->load->view('bootstrap/header');
         // Populate publications.
         $this->load->model('Publication');
         $publications = $this->Publication->get();
@@ -72,6 +75,7 @@ class Magazine extends CI_Controller {
                 'issue' => $issue,
             ));
         }
+        $this->load->view('bootstrap/footer');
     }
 
     /**
